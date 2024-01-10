@@ -114,7 +114,7 @@ func SearchJobByName(db *gorm.DB, name string) (error, []Job, int64) {
 	var result error
 	var count int64
 	name = name + "%"
-	err := db.Table("job").InnerJoins("Enterprise").Where("name like ?", name).Find(&jobs).Count(&count).Error
+	err := db.Table("job").InnerJoins("Enterprise").Where("job.name like ?", name).Find(&jobs).Count(&count).Error
 	if err != nil {
 		result = multierror.Append(result, err)
 	}
@@ -124,7 +124,7 @@ func SearchJobByName(db *gorm.DB, name string) (error, []Job, int64) {
 func SearchSingleJobByName(db *gorm.DB, name string) (error, Job, int64) {
 	var job Job
 	var count int64
-	err2 := db.Where("name = ?", name).InnerJoins("Enterprise").Find(&job).Count(&count).Error
+	err2 := db.Where("job.name = ?", name).InnerJoins("Enterprise").Find(&job).Count(&count).Error
 	if count == 0 && err2 == nil {
 		return nil, job, 0
 	}
